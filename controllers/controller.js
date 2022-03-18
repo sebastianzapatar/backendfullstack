@@ -65,6 +65,93 @@ const controller={
                 estudiantes
             })
         })
+    },
+    update_estudainte:(req,res)=>{//revisar
+        //1.Se toma el id
+        /* 2. Recogemos los parametros
+        3. validamos los parametros
+        4. se actualiza 
+        5.se devuelve el objeto actualizado
+        */
+       const {id}=req.params;
+       const {nombre,apellido}=req.body;
+       console.log(nombre,apellido);
+       
+       console.log(id);
+       try{
+           
+            if(nombre.length>0 && apellido.length>0){
+                
+                Estudiante.findOneAndUpdate({_id,id},{nombre,apellido},{new:true},(err,estudianteupdate)=>{
+                    if(err){
+                        return res.status(500).send({
+                            status:'error',
+                            message:'No se actualizo'
+                        })
+                    }
+                    if(!estudianteupdate){
+                        return res.status(400).send({
+                            status:'Not found',
+                            message:'No existe el id'
+                        })
+                    }
+                    return res.status(200).send({
+                        status:'ok',
+                        estudianteupdate
+                    })
+                })
+            }   
+            else{
+                return res.status(500).send({
+                    status:'error',
+                    message:'No mando parametros'
+                })
+            }
+       }
+       catch(error){
+
+       }
+    },
+    delete:(req,res)=>{
+        const {id}=req.params;
+        Estudiante.findByIdAndDelete({_id:id},(err,estudianteRemove)=>{
+            if(err){
+                return res.status(500).send({
+                    status:'error',
+                    message:'Error en la peticion'
+                })
+            }
+            if(!estudianteRemove){
+                return res.status(400).send({
+                    status:'Not found',
+                    message:'No existe el id'
+                })
+            }
+            return res.status(200).send({
+                status:'ok',
+                estudianteRemove
+            })
+        })
+    },
+    get_estudiante:(req,res)=>{
+        const {id}=req.params;
+        Estudiante.findById(id,(err,estudiante)=>{
+            if(err){
+                return res.status(500).send({
+                    status:'error',
+                    message:'Error en la peticion'
+                })
+            }
+            if(!estudiante){
+                return res.status(400).send({
+                    status:'Not found',
+                    message:'No existe el id'
+                })
+            }
+            return res.status(200).send({
+                estudiante
+            })
+        })
     }
 }
 module.exports=controller;
